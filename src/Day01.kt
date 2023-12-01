@@ -1,17 +1,22 @@
+import java.io.File
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+
+    val regularDigits = (1..9).associateBy { "$it" }
+    val spelledDigits = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine").mapIndexed { index, digit -> digit to index + 1 }
+
+    fun List<String>.calibrate(digits: Map<String, Int>) = sumOf { line ->
+        val firstDigit = line.findAnyOf(digits.keys)?.second
+        val lastDigit = line.findLastAnyOf(digits.keys)?.second
+        "${digits[firstDigit]}${digits[lastDigit]}".toIntOrNull() ?: 0
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
+    fun part1(input: List<String>) = input.calibrate(regularDigits)
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    fun part2(input: List<String>) = input.calibrate(regularDigits + spelledDigits)
 
-    val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+    val input = File("src/Day01.txt").readLines()
+
+    println(part1(input))
+    println(part2(input))
 }
